@@ -21,7 +21,7 @@ mypy = "*"
 pytest = "*"
 pytest-cov = "*"
 behave = "*"
-nodejs = ">=20,<22"
+nodejs = ">=20,<25"
 
 [pypi-dependencies]
 playwright = "*"

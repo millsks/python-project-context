@@ -21,9 +21,11 @@ Context and configuration files to guide GitHub Copilot for Python development w
 
 1. **Copy files to your project root** (or extract the zip)
 2. **Replace placeholders:**
-   - `your_package_name` → your actual package name
-   - `your_project` → your project name in pixi.toml
+   - `your_package_name` → your actual package name in src/ directory and imports
+   - `python-project-context` → your project name in pixi.toml (currently set to this repo's name as a working example)
    - `[Your Name]` → your name in LICENSE
+   
+   **Note:** This repository uses `python-project-context` as the project name to provide a working example. When using these files for your own project, do a find-and-replace to update it to your actual project name.
 3. **Keep context files open in VS Code** while coding to maximize Copilot's awareness
 4. **Install dependencies:**
    ```bash

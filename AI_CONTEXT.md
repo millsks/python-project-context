@@ -1,10 +1,33 @@
-# GitHub Copilot Instructions
+# AI Context (Vendor-Neutral)
 
-This file provides concentrated context for GitHub Copilot when reviewing PRs and generating code suggestions on GitHub.com. For full details, see the root context files: COPILOT_CONTEXT.md, PY_STYLE.md, TESTING_GUIDE.md, and others.
+This file provides context for AI coding assistants (GitHub Copilot, Cursor, Cline, Aider, Devin, etc.) working on Python projects.
 
----
+## Project Facts
 
-## Coding Style & Standards
+**Quick Reference:**
+- **Python**: >=3.11, <3.13
+- **Project Layout**: `src/` for code, `tests/` for tests, `features/` for BDD, `e2e/` for Playwright
+- **Formatter**: Ruff (line-length 100, includes import sorting)
+- **Linter**: Ruff (E, F, I, B, UP, ANN, SIM)
+- **Type Checker**: MyPy (strict-ish mode)
+- **Test Runner**: pytest (unit/integration), behave (BDD), Playwright (E2E)
+- **Task Runner**: Pixi (`pixi.toml`)
+- **Local DB**: SQLite (`.data/dev.db`)
+- **Prod DB**: PostgreSQL via `DATABASE_URL` env var
+
+**Standard Commands:**
+```bash
+pixi run fmt          # Format code (ruff format + auto-fix)
+pixi run fmt-check    # Check formatting (CI-safe, no mutations)
+pixi run lint         # Lint code (ruff check)
+pixi run mypy         # Type check
+pixi run test         # Run pytest
+pixi run bdd          # Run behave tests
+pixi run e2e          # Run Playwright tests
+pixi run ci           # All checks (fmt-check, mypy, test)
+```
+
+## Coding Style
 
 ### General Principles
 - Follow PEP 8 strictly: spaces over tabs, 100-char line length
@@ -14,19 +37,31 @@ This file provides concentrated context for GitHub Copilot when reviewing PRs an
 - Google-style docstrings for all public APIs
 
 ### Python Specifics
-- Use `dataclasses.dataclass` or Pydantic for data models
-- Use `pathlib.Path` over `os.path`
-- Structured logging with `structlog` or stdlib `logging` with extras
-- SQLAlchemy 2.0 style: sessionmaker per request/task
-- Keep modules focused by domain; avoid "utils" grab-bags
+- **Naming**: `snake_case` for variables/functions, `PascalCase` for classes, `SCREAMING_SNAKE_CASE` for constants
+- **Data Models**: Use `dataclasses.dataclass` or Pydantic
+- **Paths**: Use `pathlib.Path` over `os.path`
+- **Logging**: Structured logging with `structlog` or stdlib `logging` with extras
+- **SQLAlchemy**: Use 2.0 style with sessionmaker per request/task
+- **Module Organization**: Keep modules focused by domain; avoid "utils" grab-bags
 
-### Naming Conventions
-- `snake_case` for variables and functions
-- `PascalCase` for types/classes
-- `SCREAMING_SNAKE_CASE` for constants
-- Descriptive verbs for functions: `get_`, `set_`, `compute_`, `validate_`, `transform_`
+### Docstring Example
+```python
+def fetch_active_user(user_id: str, session: Session) -> Optional[dict]:
+    """
+    Fetch an active user by ID.
 
----
+    Args:
+        user_id: The UUID of the user.
+        session: SQLAlchemy session for database access.
+
+    Returns:
+        Dict with user fields if found and active, else None.
+
+    Raises:
+        UserServiceError: On repository failures.
+    """
+    # implementation
+```
 
 ## Project Structure
 
@@ -39,8 +74,6 @@ scripts/                # CLI scripts (idempotent)
 examples/               # Runnable patterns/templates
 ```
 
----
-
 ## Error Handling & Security
 
 ### Error Handling
@@ -49,25 +82,23 @@ examples/               # Runnable patterns/templates
 - Validate inputs at boundaries; sanitize outputs for logs
 
 ### Security
-- No secrets in code; use env vars or secret manager
+- No secrets in code; use env vars or secret manager (see `.env.example`)
 - Use parameterized queries/ORM; never string-concatenate SQL
 - Add timeouts/retries for I/O with exponential backoff
-
----
 
 ## Database & I/O
 
 ### Database URLs
-- Local dev: `sqlite:///./.data/dev.db`
-- Test: `sqlite+pysqlite:///:memory:`
-- Prod: `postgresql+psycopg://user:pass@host:5432/dbname` via `DATABASE_URL` env var
+- **Local dev**: `sqlite:///./.data/dev.db`
+- **Test**: `sqlite+pysqlite:///:memory:`
+- **Prod**: `postgresql+psycopg://user:pass@host:5432/dbname` via `DATABASE_URL` env var
 
 ### Patterns
 - Abstract DB behind repository interface; inject engine/session
 - Use SQLAlchemy 2.0 style with proper session management
 - Migrations via Alembic; do not import models at migration runtime unnecessarily
 
-### Example Repository Pattern
+### Repository Pattern Example
 ```python
 from typing import Protocol, Optional
 from sqlalchemy.orm import Session
@@ -80,11 +111,10 @@ class SqlAlchemyUserRepo:
         self.session = session
 
     def get_by_id(self, user_id: str) -> Optional[dict]:
+        # map ORM entity -> dict for domain purity
         u = self.session.get(User, user_id)
         return None if not u else {"id": u.id, "email": u.email.lower()}
 ```
-
----
 
 ## Testing Standards
 
@@ -115,36 +145,6 @@ class SqlAlchemyUserRepo:
 - Record trace/video on failure only; headless by default in CI
 - Seed data via API or DB fixture; clean up after
 
-### Example Pytest Fixture
-```python
-from __future__ import annotations
-import os
-import pytest
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker, Session
-
-TEST_DB_URL = os.getenv("TEST_DATABASE_URL", "sqlite+pysqlite:///:memory:")
-
-@pytest.fixture(scope="session")
-def engine():
-    eng = create_engine(TEST_DB_URL, future=True)
-    # Apply migrations or create_all here
-    yield eng
-    eng.dispose()
-
-@pytest.fixture()
-def session(engine) -> Session:
-    SessionLocal = sessionmaker(bind=engine, autoflush=False, autocommit=False, future=True)
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.rollback()
-        db.close()
-```
-
----
-
 ## Code Patterns We Prefer
 
 ### Dependency Injection
@@ -170,8 +170,6 @@ async def get_user_profile(user_id: str, repo: UserRepo, logger) -> Optional[dic
     return {"id": user["id"], "email": user["email"]}
 ```
 
----
-
 ## Anti-Patterns (Avoid)
 
 - Large functions (>80 lines) or deep nesting (>2 levels)
@@ -180,67 +178,19 @@ async def get_user_profile(user_id: str, repo: UserRepo, logger) -> Optional[dic
 - Mixing sync/async unless necessary and well-isolated
 - String concatenation for SQL queries
 
----
+## Related Files
 
-## Tooling & Commands
+For more detailed guidance, see:
+- **PY_STYLE.md** - Python-specific style details
+- **TESTING_GUIDE.md** - Testing conventions and commands
+- **DB_GUIDE.md** - Database configuration
+- **TOOLS_PREFERENCES.md** - Tooling commands
+- **PROMPT_TEMPLATES.md** - Reusable prompts for AI assistants
+- **pyproject.toml** - Tool configurations (Ruff, MyPy, pytest)
+- **pixi.toml** - Tasks and dependencies
 
-### Pixi Tasks
-- Format: `pixi run fmt` (Ruff format + auto-fix)
-- Format check: `pixi run fmt-check` (Ruff format check-only)
-- Lint: `pixi run lint` (Ruff check)
-- Type check: `pixi run mypy`
-- Test: `pixi run test` (pytest)
-- BDD: `pixi run bdd` (behave)
-- E2E: `pixi run e2e` (Playwright)
-- All checks: `pixi run ci`
+## Assistant-Specific Files
 
-### Tool Configuration
-- **Ruff**: line-length 100, target py311, format + lint in one tool
-- **Ruff lint**: extend-select E,F,I,B,UP,ANN,SIM; ignore ANN101,ANN102
-- **Ruff format**: double quotes, space indentation, auto line-ending
-- **MyPy**: strict-ish (warn_return_any, disallow_untyped_defs, etc.)
-
----
-
-## Docstring Example
-
-```python
-def fetch_active_user(user_id: str, session: Session) -> Optional[dict]:
-    """
-    Fetch an active user by ID.
-
-    Args:
-        user_id: The UUID of the user.
-        session: SQLAlchemy session for database access.
-
-    Returns:
-        Dict with user fields if found and active, else None.
-
-    Raises:
-        UserServiceError: On repository failures.
-    """
-    # implementation
-```
-
----
-
-## Environment
-
-- Python: >=3.11
-- Local DB: SQLite (`.data/dev.db`)
-- Prod DB: Postgres via `DATABASE_URL` env var
-- Task runner: Pixi (`pixi.toml`)
-
----
-
-## Summary for PR Reviews
-
-When reviewing code or generating suggestions:
-1. Enforce PEP 8, type hints, and 100-char lines
-2. Check for dependency injection and pure functions
-3. Verify tests follow AAA pattern with proper fixtures
-4. Ensure no secrets, SQL injection risks, or global state
-5. Prefer small functions with early returns
-6. Validate docstrings for public APIs
-
-For complete context, see root files: COPILOT_CONTEXT.md, PY_STYLE.md, TESTING_GUIDE.md, TOOLS_PREFERENCES.md, DB_GUIDE.md.
+- **.cursorrules** - Cursor IDE context
+- **.clinerules** - Cline/Claude Code context
+- **.github/copilot-instructions.md** - GitHub Copilot context

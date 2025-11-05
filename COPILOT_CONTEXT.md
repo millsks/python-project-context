@@ -37,7 +37,7 @@
 
 ## Tooling Defaults
 - Env/tasks: Pixi (`pixi.toml`).
-- Format: Black (line-length 100) + isort (profile=black).
+- Format: Ruff (line-length 100, includes import sorting).
 - Lint: Ruff (E,F,I,B,UP,ANN,SIM).
 - Type check: MyPy (strict-ish).
 - Tests: pytest; behave; Playwright (headed in CI only if needed).

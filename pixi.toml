@@ -27,7 +27,7 @@ nodejs = "*"
 playwright = "*"
 pytest-playwright = "*"
 sqlalchemy = ">=2.0"
-psycopg[binary] = "*"
+psycopg = {version = "*", extras = ["binary"]}
 
 [feature.dev.dependencies]
 alembic = "*"

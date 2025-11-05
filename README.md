@@ -10,8 +10,8 @@ Context and configuration files to guide GitHub Copilot for Python development w
 - **TESTING_GUIDE.md** - Testing conventions (pytest, behave, Playwright)
 - **TOOLS_PREFERENCES.md** - Tooling commands and environment setup
 - **DB_GUIDE.md** - Database configuration (SQLite/Postgres)
-- **PROMPT_TEMPLATES.md** - Reusable prompts for AI assistants
-- **pyproject.toml** - Black, isort, Ruff, MyPy configuration
+- **PROMPT_TEMPLATES.md** - Reusable prompts for AI assistant
+- **pyproject.toml** - Ruff (format + lint), MyPy configuration
 - **pixi.toml** - Pixi tasks and dependencies
 - **.editorconfig** - Editor formatting rules
 - **tests/conftest.py** - Pytest fixtures template

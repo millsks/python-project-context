@@ -4,12 +4,13 @@ Context and configuration files to guide GitHub Copilot for Python development w
 
 ## What's Included
 
+- **AI_CONTEXT.md** - Vendor-neutral context for all AI coding assistants (single source of truth)
 - **COPILOT_CONTEXT.md** - Global coding style, patterns, and conventions
 - **PY_STYLE.md** - Python-specific style guide
 - **TESTING_GUIDE.md** - Testing conventions (pytest, behave, Playwright)
 - **TOOLS_PREFERENCES.md** - Tooling commands and environment setup
 - **DB_GUIDE.md** - Database configuration (SQLite/Postgres)
-- **PROMPT_TEMPLATES.md** - Reusable prompts for Copilot Chat
+- **PROMPT_TEMPLATES.md** - Reusable prompts for AI assistant
 - **pyproject.toml** - Ruff (format + lint), MyPy configuration
 - **pixi.toml** - Pixi tasks and dependencies
 - **.editorconfig** - Editor formatting rules

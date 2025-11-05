@@ -1,0 +1,46 @@
+# Cursor Ignore - Exclude from AI context indexing
+
+# Virtual environments and package managers
+.pixi/
+.venv/
+venv/
+env/
+ENV/
+.conda/
+
+# Build and distribution
+build/
+dist/
+*.egg-info/
+__pycache__/
+
+# Data and databases
+.data/
+*.db
+*.sqlite
+*.sqlite3
+
+# Test artifacts
+.pytest_cache/
+.coverage
+htmlcov/
+coverage/
+.hypothesis/
+playwright-report/
+test-results/
+
+# Tool caches
+.mypy_cache/
+.ruff_cache/
+.tox/
+.nox/
+
+# Node modules (for Playwright)
+node_modules/
+
+# IDE and editor
+.vscode/
+.idea/
+
+# Logs
+*.log

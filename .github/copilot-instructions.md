@@ -21,7 +21,7 @@ This file provides concentrated context for GitHub Copilot when reviewing PRs an
 - Keep modules focused by domain; avoid "utils" grab-bags
 
 ### Naming Conventions
-- `camelCase` for variables
+- `snake_case` for variables and functions
 - `PascalCase` for types/classes
 - `SCREAMING_SNAKE_CASE` for constants
 - Descriptive verbs for functions: `get_`, `set_`, `compute_`, `validate_`, `transform_`

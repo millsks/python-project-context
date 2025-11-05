@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import Sequence
+from collections.abc import Sequence
 
 from fastapi import APIRouter, Depends, HTTPException, status
 from pydantic import BaseModel, EmailStr
@@ -89,7 +89,7 @@ def get_user(
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"User not found: {e}",
-        )
+        ) from e
 
 
 @router.get("/", response_model=UserListResponse)
@@ -141,7 +141,7 @@ def create_user(
         raise HTTPException(
             status_code=status.HTTP_409_CONFLICT,
             detail=f"User already exists: {e}",
-        )
+        ) from e
 
 
 @router.patch("/{user_id}", response_model=UserResponse)
@@ -170,7 +170,7 @@ def update_user(
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"User not found: {e}",
-        )
+        ) from e
 
 
 @router.delete("/{user_id}", status_code=status.HTTP_204_NO_CONTENT)
@@ -193,4 +193,4 @@ def delete_user(
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"User not found: {e}",
-        )
+        ) from e

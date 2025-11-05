@@ -6,6 +6,9 @@ ignore = ["ANN101", "ANN102"]
 src = ["src"]
 exclude = [".venv", ".pixi", "build", "dist"]
 
+[tool.ruff.per-file-ignores]
+"examples/**" = ["B008"]  # FastAPI Depends() in defaults is correct pattern
+
 [tool.ruff.format]
 quote-style = "double"
 indent-style = "space"

@@ -14,7 +14,7 @@ e2e = "playwright test"
 ci = "pixi run fmt-check && pixi run mypy && pixi run test"
 
 [dependencies]
-python = ">=3.11,<3.13"
+python = ">=3.10,<3.14"
 pip = "*"
 ruff = "*"
 mypy = "*"

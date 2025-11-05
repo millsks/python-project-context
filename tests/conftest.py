@@ -1,10 +1,13 @@
 from __future__ import annotations
+
 import os
+
 import pytest
 from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker, Session
+from sqlalchemy.orm import Session, sessionmaker
 
 TEST_DB_URL = os.getenv("TEST_DATABASE_URL", "sqlite+pysqlite:///:memory:")
+
 
 @pytest.fixture(scope="session")
 def engine():
@@ -12,6 +15,7 @@ def engine():
     # TODO: apply migrations or create_all here for SQLite
     yield eng
     eng.dispose()
+
 
 @pytest.fixture()
 def session(engine) -> Session:

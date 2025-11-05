@@ -1,7 +1,8 @@
 # Tools & Commands
 
-- Format: `pixi run fmt` (Black + isort)
-- Lint: `pixi run lint` (Ruff)
+- Format: `pixi run fmt` (Ruff format + auto-fix)
+- Format check: `pixi run fmt-check` (Ruff format check-only)
+- Lint: `pixi run lint` (Ruff check)
 - Type check: `pixi run mypy`
 - Test (pytest): `pixi run test`
 - BDD (behave): `pixi run bdd`

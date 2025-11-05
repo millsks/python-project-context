@@ -1,0 +1,57 @@
+# Cline Rules for Python Project Context
+
+## Priority Files to Read
+Always read these files first to understand the project:
+- AI_CONTEXT.md (single source of truth)
+- PY_STYLE.md (Python style details)
+- TESTING_GUIDE.md (testing conventions)
+- DB_GUIDE.md (database patterns)
+- pyproject.toml (tool configurations)
+- pixi.toml (tasks and dependencies)
+
+## Project Facts
+- Python: >=3.11, <3.13
+- Layout: src/ for code, tests/ for tests
+- Formatter: Ruff (line-length 100, includes import sorting)
+- Linter: Ruff (E, F, I, B, UP, ANN, SIM)
+- Type Checker: MyPy (strict-ish)
+- Test Runner: pytest, behave, Playwright
+- Task Runner: Pixi
+- Local DB: SQLite (.data/dev.db)
+- Prod DB: PostgreSQL via DATABASE_URL
+
+## Coding Standards
+- Follow PEP 8: snake_case for variables/functions, PascalCase for classes, SCREAMING_SNAKE_CASE for constants
+- Type hints everywhere with `from __future__ import annotations`
+- Google-style docstrings for public APIs
+- Small functions (<80 lines), early returns, no deep nesting (>2 levels)
+- Use dataclasses or Pydantic for data models
+- Use pathlib.Path over os.path
+- SQLAlchemy 2.0 style with dependency injection
+
+## Testing
+- AAA pattern (Arrange-Act-Assert)
+- Use fixtures from tests/conftest.py
+- Mock only external boundaries
+- Parametrize for edge cases
+
+## Before Finalizing Changes
+Always run these commands before proposing changes:
+```bash
+pixi run fmt        # Format code
+pixi run lint       # Lint code
+pixi run mypy       # Type check
+pixi run test       # Run tests
+```
+
+## Security
+- No secrets in code (use .env file)
+- Parameterized queries only (never string concatenation)
+- Validate inputs at boundaries
+
+## Anti-Patterns to Avoid
+- Large functions (>80 lines)
+- Global mutable state
+- Side effects at import time
+- Mixing sync/async unnecessarily
+- String concatenation for SQL

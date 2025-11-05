@@ -185,8 +185,9 @@ async def get_user_profile(user_id: str, repo: UserRepo, logger) -> Optional[dic
 ## Tooling & Commands
 
 ### Pixi Tasks
-- Format: `pixi run fmt` (Black + isort)
-- Lint: `pixi run lint` (Ruff)
+- Format: `pixi run fmt` (Ruff format + auto-fix)
+- Format check: `pixi run fmt-check` (Ruff format check-only)
+- Lint: `pixi run lint` (Ruff check)
 - Type check: `pixi run mypy`
 - Test: `pixi run test` (pytest)
 - BDD: `pixi run bdd` (behave)
@@ -194,9 +195,9 @@ async def get_user_profile(user_id: str, repo: UserRepo, logger) -> Optional[dic
 - All checks: `pixi run ci`
 
 ### Tool Configuration
-- **Black**: line-length 100, target py311
-- **isort**: profile=black, line_length 100
-- **Ruff**: extend-select E,F,I,B,UP,ANN,SIM; ignore ANN101,ANN102
+- **Ruff**: line-length 100, target py311, format + lint in one tool
+- **Ruff lint**: extend-select E,F,I,B,UP,ANN,SIM; ignore ANN101,ANN102
+- **Ruff format**: double quotes, space indentation, auto line-ending
 - **MyPy**: strict-ish (warn_return_any, disallow_untyped_defs, etc.)
 
 ---

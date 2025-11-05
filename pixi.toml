@@ -4,19 +4,18 @@ channels = ["conda-forge"]
 platforms = ["linux-64", "osx-64", "osx-arm64"]
 
 [tasks]
-fmt = "black . && isort ."
+fmt = "ruff format . && ruff check --fix ."
+fmt-check = "ruff format --check . && ruff check ."
 lint = "ruff check ."
 mypy = "mypy ."
 test = "pytest -q"
 bdd = "behave -q"
 e2e = "playwright test"
-ci = "pixi run fmt && pixi run lint && pixi run mypy && pixi run test"
+ci = "pixi run fmt-check && pixi run mypy && pixi run test"
 
 [dependencies]
 python = ">=3.11,<3.13"
 pip = "*"
-black = "*"
-isort = "*"
 ruff = "*"
 mypy = "*"
 pytest = "*"
